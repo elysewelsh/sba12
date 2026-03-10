@@ -8,15 +8,17 @@ const searchMovies = async (req, res) => {
         if (!searchTerm) {
            return res.status(400).json({ error: "Title query parameter is required"});
         }
-        const response = await apiClient.get(`/?apikey=${key}&t=${searchTerm}`);
-        const transformedData = {
-            title: response.data.Title,
-            year: response.data.Year,
-            length: response.data.Runtime,
-            genre: response.data.Genre,
-            actors: response.data.Actors,
-            plot: response.data.Plot
-        };
+        const response = await apiClient.get(`/?apikey=${key}&s=${searchTerm}`);
+        // console.log(response);
+        const movies = response.data.Search;
+        const transformedData = movies.map((movie) => ({
+            title: movie.Title,
+            year: movie.Year,
+            length: movie.Runtime,
+            genre: movie.Genre,
+            actors: movie.Actors,
+            plot: movie.Plot
+        }));
         res.send(transformedData);
     } catch (error) {
         res.status(500).json({ error: error.message})
@@ -28,7 +30,6 @@ const getMovieDetails = async (req, res) => {
     const id = req.params.id;
         try {
         const response = await apiClient.get(`/?apikey=${key}&i=${id}`);
-
         const transformedData = {
         title: response.data.Title,
         year: response.data.Year,
@@ -37,9 +38,7 @@ const getMovieDetails = async (req, res) => {
         actors: response.data.Actors,
         plot: response.data.Plot
         };
-
         res.send(transformedData);
-
     } catch (error) {
         res.status(500).json({ error: error.message})
         console.error(error.message)
