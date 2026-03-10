@@ -1,11 +1,13 @@
 import express from 'express'
-import userController from '../controllers/userController.js';
+import movieController from '../controllers/movieController.js';
 
-const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userContoller'); //import controller
 
-router.get('/api//user/test', userController.getAllUsers);
-router.post('/',userController.createUser);
+router.get('/search', movieController.searchMovies);
+router.get('/id/:id', movieController.getMovie);
 
-module.export = router
+// api/search?title=thin+man
+// api/id/tt0025878
+
+export default router;
+
