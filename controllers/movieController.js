@@ -3,29 +3,28 @@ import { key } from '../config/key.js'
 
 const searchMovies = async (req, res) => {
     const searchTerm = req.query.title;
+    
     try {
+        if (!searchTerm) {
+           return res.status(400).json({ error: "Title query parameter is required"});
+        }
         const response = await apiClient.get(`/?apikey=${key}&t=${searchTerm}`);
-        console.log('response: ', response.data);
-
         const transformedData = {
-        title: response.data.Title,
-        year: response.data.Year,
-        length: response.data.Runtime,
-        genre: response.data.Genre,
-        actors: response.data.Actors,
-        plot: response.data.Plot
+            title: response.data.Title,
+            year: response.data.Year,
+            length: response.data.Runtime,
+            genre: response.data.Genre,
+            actors: response.data.Actors,
+            plot: response.data.Plot
         };
-
         res.send(transformedData);
-
     } catch (error) {
         res.status(500).json({ error: error.message})
         console.error(error.message)
     }
-
 }
 
-const getMovie = async (req, res) => {
+const getMovieDetails = async (req, res) => {
     const id = req.params.id;
         try {
         const response = await apiClient.get(`/?apikey=${key}&i=${id}`);
@@ -49,5 +48,5 @@ const getMovie = async (req, res) => {
 
 export default {
     searchMovies,
-    getMovie
+    getMovieDetails
 }
